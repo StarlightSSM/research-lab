@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Little Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M12 3h8M13 3v9L6 26a2 2 0 0 0 2 3h16a2 2 0 0 0 2-3l-7-14V3' fill='none' stroke='%232a78d6' stroke-width='2.5' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M12 3h8M13 3v9L6 26a2 2 0 0 0 2 3h16a2 2 0 0 0 2-3l-7-14V3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="14" cy="22" r="1.6" fill="currentColor"/><circle cx="19" cy="19" r="1.1" fill="currentColor"/></svg>
+    <div>
+      <h1 id="labName">My Little Lab</h1>
+      <p id="hello" class="muted">연구실 불을 켜는 중…</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <span class="pill" id="schedulePill" title="매일 자동 수집 시각">⏰ --:--</span>
+    <span class="pill" id="enginePill" title="논문 분석/브리핑 엔진">🧠 확인 중</span>
+    <button class="btn primary" id="collectBtn">지금 수집</button>
+    <button class="btn icon" id="settingsBtn" title="설정" aria-label="설정">⚙</button>
+    <button class="btn icon" id="themeBtn" title="테마 전환" aria-label="테마 전환">◐</button>
+  </div>
+</header>
+<div id="progressBar" class="progress hidden"><span></span><em id="progressText"></em></div>
+
+<main class="wrap">
+  <!-- 오늘의 브리핑 -->
+  <section class="card briefing" id="briefing">
+    <div class="card-head">
+      <h2>오늘의 브리핑</h2>
+      <span class="muted small" id="briefMeta"></span>
+    </div>
+    <p class="greet" id="briefGreeting">아직 수집 기록이 없어요. 오른쪽 위 <b>지금 수집</b>을 눌러 첫 브리핑을 받아보세요.</p>
+    <div class="brief-grid">
+      <div>
+        <h3 class="sub">주제별 흐름</h3>
+        <ul class="highlights" id="briefHighlights"></ul>
+      </div>
+      <div>
+        <h3 class="sub">오늘 꼭 볼 것</h3>
+        <ol class="mustread" id="briefMust"></ol>
+        <div class="idea hidden" id="briefIdea"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI -->
+  <section class="kpis" id="kpis"></section>
+
+  <div class="grid">
+    <!-- 피드 -->
+    <section class="card feed">
+      <div class="tabs" role="tablist" id="tabs">
+        <button data-kind="paper" class="active">논문</button>
+        <button data-kind="news">뉴스</button>
+        <button data-kind="issue">이슈·커뮤니티</button>
+        <button data-kind="data">데이터·코드</button>
+        <button data-kind="starred">★ 스크랩</button>
+      </div>
+      <div class="filters">
+        <div class="chips" id="topicChips"></div>
+        <div class="filter-right">
+          <input type="search" id="search" placeholder="제목/내용 검색">
+          <select id="days" aria-label="기간">
+            <option value="1">오늘</option>
+            <option value="7">7일</option>
+            <option value="14" selected>14일</option>
+            <option value="60">60일</option>
+          </select>
+        </div>
+      </div>
+      <div id="feedList" class="feed-list"></div>
+    </section>
+
+    <aside class="side">
+      <!-- 논문 연구실 -->
+      <section class="card">
+        <div class="card-head"><h2>논문 연구실</h2><span class="muted small">PDF → 분석 리포트</span></div>
+        <label class="drop" id="drop">
+          <input type="file" id="fileInput" accept="application/pdf" multiple hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <b>논문 PDF를 끌어다 놓거나 클릭</b>
+          <span class="muted small">핵심 요약 · 목차 · 키워드 · 방법론 · 쟁점 · 한계점 · 관련 논문을 PDF로 정리해요</span>
+        </label>
+        <ul class="papers" id="paperList"></ul>
+      </section>
+
+      <!-- 주제 레이더 -->
+      <section class="card">
+        <div class="card-head"><h2>주제 레이더</h2><span class="muted small">최근 7일 수집량</span></div>
+        <div id="topicBars" class="bars"></div>
+      </section>
+
+      <!-- 수집 로그 -->
+      <section class="card">
+        <div class="card-head"><h2>수집 로그</h2></div>
+        <div id="runInfo" class="small muted">기록 없음</div>
+        <details class="log"><summary>상세 로그</summary><pre id="runLog"></pre></details>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<!-- 분석 보기 모달 -->
+<dialog id="paperModal" class="modal wide">
+  <div class="modal-head">
+    <div><span class="label">PAPER BRIEF</span><h2 id="pmTitle"></h2><p class="muted small" id="pmMeta"></p></div>
+    <div class="modal-actions">
+      <a class="btn" id="pmOpen" target="_blank">PDF 보기</a>
+      <a class="btn primary" id="pmDownload">PDF 저장</a>
+      <button class="btn icon" data-close aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="modal-body" id="pmBody"></div>
+</dialog>
+
+<!-- 설정 모달 -->
+<dialog id="settingsModal" class="modal wide">
+  <div class="modal-head">
+    <h2>연구실 설정</h2>
+    <div class="modal-actions">
+      <button class="btn primary" id="saveSettings">저장</button>
+      <button class="btn icon" data-close aria-label="닫기">✕</button>
+    </div>
+  </div>
+  <div class="modal-body settings" id="settingsBody"></div>
+</dialog>
+
+<div id="toast" class="toast" role="status"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
