@@ -65,6 +65,66 @@
         "graph",
         "network"
       ]
+    },
+    {
+      "name": "UI",
+      "keywords_en": [
+        "user interface design",
+        "GUI usability"
+      ],
+      "keywords_ko": [
+        "UI 디자인",
+        "사용자 인터페이스"
+      ],
+      "data_keywords": [
+        "gui",
+        "interface"
+      ]
+    },
+    {
+      "name": "UX",
+      "keywords_en": [
+        "user experience",
+        "UX research"
+      ],
+      "keywords_ko": [
+        "사용자 경험 UX",
+        "UX 리서치"
+      ],
+      "data_keywords": [
+        "usability",
+        "user-experience"
+      ]
+    },
+    {
+      "name": "서비스 사용자 이탈률",
+      "keywords_en": [
+        "customer churn",
+        "user retention"
+      ],
+      "keywords_ko": [
+        "\"고객 이탈\"",
+        "\"이탈률\" 앱"
+      ],
+      "data_keywords": [
+        "retention",
+        "subscription"
+      ]
+    },
+    {
+      "name": "이탈률 예측",
+      "keywords_en": [
+        "churn prediction",
+        "customer churn prediction machine learning"
+      ],
+      "keywords_ko": [
+        "\"이탈 예측\"",
+        "\"이탈률 예측\""
+      ],
+      "data_keywords": [
+        "churn",
+        "customer-churn"
+      ]
     }
   ],
   "sources": {
